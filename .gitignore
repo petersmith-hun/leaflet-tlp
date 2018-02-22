@@ -9,7 +9,5 @@ target/
 *.csv
 *.mwb.bak
 .springBeans
-deploy.bat
-*/docs/*
 logs/
 application.yml
