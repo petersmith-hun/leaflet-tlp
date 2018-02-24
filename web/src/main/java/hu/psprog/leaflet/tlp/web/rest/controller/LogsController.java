@@ -67,7 +67,6 @@ public class LogsController {
     public ResponseEntity<LogEventPage> getLogs(LogRequest logRequest) throws LogRetrievalFailureException {
 
         try {
-
             return ResponseEntity
                     .ok(logProcessingService.getLogs(logRequest));
         } catch (Exception exc) {

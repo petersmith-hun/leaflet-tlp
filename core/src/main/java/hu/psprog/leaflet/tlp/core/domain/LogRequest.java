@@ -3,6 +3,7 @@ package hu.psprog.leaflet.tlp.core.domain;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
 import java.util.Objects;
@@ -16,13 +17,17 @@ public class LogRequest {
 
     private String source;
     private String level;
-    private Date from;
-    private Date to;
     private String content;
     private int page;
     private int limit;
     private OrderBy orderBy;
     private OrderDirection orderDirection;
+
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+    private Date from;
+
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+    private Date to;
 
     public String getSource() {
         return source;

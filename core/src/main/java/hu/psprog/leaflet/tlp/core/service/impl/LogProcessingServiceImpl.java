@@ -46,9 +46,7 @@ public class LogProcessingServiceImpl implements LogProcessingService {
             loggingEventPage = logEventDAO.findAll(pageable);
         }
 
-        return LogEventPage.getBuilder()
-                .withEntitiesOnPage(loggingEventPage.getContent())
-                .build();
+        return conversionService.convert(loggingEventPage, LogEventPage.class);
     }
 
     @Override
