@@ -24,7 +24,7 @@
     </dependencies>
 
     <build>
-        <finalName>leaflet-backend</finalName>
+        <finalName>leaflet-tlp</finalName>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
