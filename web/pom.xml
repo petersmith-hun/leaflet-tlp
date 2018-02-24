@@ -34,6 +34,7 @@
                     <jvmArguments>-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=9995</jvmArguments>
                     <arguments>
                         <argument>--spring.profiles.active=${spring.profiles.active}</argument>
+                        <argument>--spring.config.location=${spring.config.location}</argument>
                     </arguments>
                     <executable>true</executable>
                 </configuration>
