@@ -4,6 +4,7 @@ import com.querydsl.core.types.dsl.BooleanExpression;
 import hu.psprog.leaflet.tlp.core.domain.LogRequest;
 import hu.psprog.leaflet.tlp.core.domain.QLoggingEvent;
 import hu.psprog.leaflet.tlp.core.service.qdsl.expression.strategy.ExpressionStrategy;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
 import java.util.Objects;
@@ -24,7 +25,7 @@ public class LevelExpressionStrategy implements ExpressionStrategy {
     public Optional<BooleanExpression> applyStrategy(QLoggingEvent event, LogRequest logRequest) {
 
         BooleanExpression expression = null;
-        if (Objects.nonNull(logRequest.getLevel())) {
+        if (Objects.nonNull(logRequest.getLevel()) && !StringUtils.EMPTY.equals(logRequest.getLevel())) {
             expression = event.level.equalsIgnoreCase(logRequest.getLevel());
         }
 

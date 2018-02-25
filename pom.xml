@@ -6,7 +6,7 @@
 
     <groupId>hu.psprog.leaflet</groupId>
     <artifactId>tlp</artifactId>
-    <version>1.0.0-dev</version>
+    <version>1.0.1-dev</version>
     <modules>
         <module>web</module>
         <module>core</module>
