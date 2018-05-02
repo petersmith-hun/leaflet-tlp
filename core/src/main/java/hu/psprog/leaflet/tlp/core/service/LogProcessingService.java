@@ -1,7 +1,7 @@
 package hu.psprog.leaflet.tlp.core.service;
 
-import hu.psprog.leaflet.tlp.core.domain.LogEventPage;
-import hu.psprog.leaflet.tlp.core.domain.LogRequest;
+import hu.psprog.leaflet.tlp.api.domain.LogEventPage;
+import hu.psprog.leaflet.tlp.api.domain.LogRequest;
 import hu.psprog.leaflet.tlp.core.domain.LoggingEvent;
 
 /**
