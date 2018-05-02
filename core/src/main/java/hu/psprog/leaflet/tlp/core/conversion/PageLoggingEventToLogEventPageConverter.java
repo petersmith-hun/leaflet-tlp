@@ -1,10 +1,13 @@
 package hu.psprog.leaflet.tlp.core.conversion;
 
-import hu.psprog.leaflet.tlp.core.domain.LogEventPage;
+import hu.psprog.leaflet.tlp.api.domain.LogEventPage;
 import hu.psprog.leaflet.tlp.core.domain.LoggingEvent;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
+
+import java.util.stream.Collectors;
 
 /**
  * Converts {@link Page} of {@link LoggingEvent} objects to {@link LogEventPage}.
@@ -13,6 +16,13 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class PageLoggingEventToLogEventPageConverter implements Converter<Page<LoggingEvent>, LogEventPage> {
+
+    private LoggingEventEntityToDomainConverter loggingEventEntityToDomainConverter;
+
+    @Autowired
+    public PageLoggingEventToLogEventPageConverter(LoggingEventEntityToDomainConverter loggingEventEntityToDomainConverter) {
+        this.loggingEventEntityToDomainConverter = loggingEventEntityToDomainConverter;
+    }
 
     @Override
     public LogEventPage convert(Page<LoggingEvent> source) {
@@ -27,7 +37,9 @@ public class PageLoggingEventToLogEventPageConverter implements Converter<Page<L
                 .withLast(source.isLast())
                 .withHasNext(source.hasNext())
                 .withHasPrevious(source.hasPrevious())
-                .withEntitiesOnPage(source.getContent())
+                .withEntitiesOnPage(source.getContent().stream()
+                        .map(loggingEventEntityToDomainConverter::convert)
+                        .collect(Collectors.toList()))
                 .build();
     }
 }

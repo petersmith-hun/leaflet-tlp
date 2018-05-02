@@ -3,7 +3,7 @@ package hu.psprog.leaflet.tlp.core.service.qdsl.expression.strategy.impl;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Predicate;
 import com.querydsl.core.types.dsl.BooleanExpression;
-import hu.psprog.leaflet.tlp.core.domain.LogRequest;
+import hu.psprog.leaflet.tlp.api.domain.LogRequest;
 import hu.psprog.leaflet.tlp.core.domain.QLoggingEvent;
 import org.junit.Test;
 import org.junit.runner.RunWith;

@@ -1,6 +1,6 @@
 package hu.psprog.leaflet.tlp.core.conversion;
 
-import hu.psprog.leaflet.tlp.core.domain.LogEventPage;
+import hu.psprog.leaflet.tlp.api.domain.LogEventPage;
 import hu.psprog.leaflet.tlp.core.domain.LoggingEvent;
 import org.junit.Test;
 import org.junit.runner.RunWith;
