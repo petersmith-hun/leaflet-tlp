@@ -1,6 +1,6 @@
 package hu.psprog.leaflet.tlp.core.conversion;
 
-import hu.psprog.leaflet.tlp.core.domain.LogRequest;
+import hu.psprog.leaflet.tlp.api.domain.LogRequest;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;

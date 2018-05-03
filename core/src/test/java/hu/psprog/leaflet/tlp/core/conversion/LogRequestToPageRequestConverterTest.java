@@ -1,8 +1,8 @@
 package hu.psprog.leaflet.tlp.core.conversion;
 
-import hu.psprog.leaflet.tlp.core.domain.LogRequest;
-import hu.psprog.leaflet.tlp.core.domain.OrderBy;
-import hu.psprog.leaflet.tlp.core.domain.OrderDirection;
+import hu.psprog.leaflet.tlp.api.domain.LogRequest;
+import hu.psprog.leaflet.tlp.api.domain.OrderBy;
+import hu.psprog.leaflet.tlp.api.domain.OrderDirection;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;

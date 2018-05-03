@@ -1,6 +1,6 @@
 package hu.psprog.leaflet.tlp.web.exception;
 
-import hu.psprog.leaflet.tlp.core.domain.LogRequest;
+import hu.psprog.leaflet.tlp.api.domain.LogRequest;
 
 /**
  * Exception to throw when log retrieval request cannot be fulfilled.

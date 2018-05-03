@@ -1,8 +1,8 @@
 package hu.psprog.leaflet.tlp.core.service.impl;
 
 import com.querydsl.core.types.Predicate;
-import hu.psprog.leaflet.tlp.core.domain.LogEventPage;
-import hu.psprog.leaflet.tlp.core.domain.LogRequest;
+import hu.psprog.leaflet.tlp.api.domain.LogEventPage;
+import hu.psprog.leaflet.tlp.api.domain.LogRequest;
 import hu.psprog.leaflet.tlp.core.domain.LoggingEvent;
 import hu.psprog.leaflet.tlp.core.persistence.dao.LogEventDAO;
 import hu.psprog.leaflet.tlp.core.service.qdsl.expression.builder.ExpressionBuilder;
