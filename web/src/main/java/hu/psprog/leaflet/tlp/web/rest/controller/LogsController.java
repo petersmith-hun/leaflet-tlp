@@ -6,6 +6,7 @@ import hu.psprog.leaflet.tlp.core.domain.LoggingEvent;
 import hu.psprog.leaflet.tlp.core.service.LogProcessingService;
 import hu.psprog.leaflet.tlp.web.exception.LogRetrievalFailureException;
 import hu.psprog.leaflet.tlp.web.exception.LoggingEventProcessingFailureException;
+import hu.psprog.leaflet.tlp.web.exception.model.ErrorMessageResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,9 +17,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Log processor controller.
@@ -31,7 +29,6 @@ public class LogsController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(LogsController.class);
     private static final String UNEXPECTED_EXCEPTION_OCCURRED = "Unexpected exception occurred";
-    private static final String MESSAGE = "message";
 
     static final String PATH_LOGS = "/logs";
 
@@ -102,7 +99,7 @@ public class LogsController {
      * @return exception message with HTTP status 400
      */
     @ExceptionHandler(LogRetrievalFailureException.class)
-    ResponseEntity<Map<String, String>> retrievalFailureHandler(LogRetrievalFailureException exception) {
+    ResponseEntity<ErrorMessageResponse> retrievalFailureHandler(LogRetrievalFailureException exception) {
 
         LOGGER.error("Failed to retrieve logs", exception);
 
@@ -115,15 +112,15 @@ public class LogsController {
      * Exception handler for {@link LoggingEventProcessingFailureException}.
      *
      * @param exception exception object
-     * @return exception message with HTTP status 422
+     * @return exception message with HTTP status 409
      */
     @ExceptionHandler(LoggingEventProcessingFailureException.class)
-    ResponseEntity<Map<String, String>> eventProcessingFailureHandler(LoggingEventProcessingFailureException exception) {
+    ResponseEntity<ErrorMessageResponse> eventProcessingFailureHandler(LoggingEventProcessingFailureException exception) {
 
         LOGGER.error("Failed to process log event", exception);
 
         return ResponseEntity
-                .status(HttpStatus.UNPROCESSABLE_ENTITY)
+                .status(HttpStatus.CONFLICT)
                 .body(buildExceptionMessageForResponse(exception));
     }
 
@@ -134,7 +131,7 @@ public class LogsController {
      * @return exception message with HTTP status 500
      */
     @ExceptionHandler
-    ResponseEntity<Map<String, String>> defaultExceptionHandler(Exception exception) {
+    ResponseEntity<ErrorMessageResponse> defaultExceptionHandler(Exception exception) {
 
         LOGGER.error(UNEXPECTED_EXCEPTION_OCCURRED, exception);
 
@@ -143,19 +140,17 @@ public class LogsController {
                 .body(buildExceptionMessageForResponse());
     }
 
-    private Map<String, String> buildExceptionMessageForResponse() {
+    private ErrorMessageResponse buildExceptionMessageForResponse() {
 
-        Map<String, String> message = new HashMap<>();
-        message.put(MESSAGE, UNEXPECTED_EXCEPTION_OCCURRED);
-
-        return message;
+        return ErrorMessageResponse.getBuilder()
+                .withMessage(UNEXPECTED_EXCEPTION_OCCURRED)
+                .build();
     }
 
-    private Map<String, String> buildExceptionMessageForResponse(Exception exception) {
+    private ErrorMessageResponse buildExceptionMessageForResponse(Exception exception) {
 
-        Map<String, String> message = new HashMap<>();
-        message.put(MESSAGE, exception.getMessage());
-
-        return message;
+        return ErrorMessageResponse.getBuilder()
+                .withMessage(exception.getMessage())
+                .build();
     }
 }
