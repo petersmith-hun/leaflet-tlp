@@ -6,7 +6,7 @@ import hu.psprog.leaflet.tlp.api.domain.OrderDirection;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 

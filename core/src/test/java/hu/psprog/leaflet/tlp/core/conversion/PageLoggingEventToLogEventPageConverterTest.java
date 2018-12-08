@@ -6,7 +6,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -45,7 +45,7 @@ public class PageLoggingEventToLogEventPageConverterTest {
         // given
         List<LoggingEvent> loggingEventList = Arrays.asList(CORE_LOGGING_EVENT_1, CORE_LOGGING_EVENT_2);
         List<hu.psprog.leaflet.tlp.api.domain.LoggingEvent> expectedEventList = Arrays.asList(API_LOGGING_EVENT_1, API_LOGGING_EVENT_2);
-        Page<LoggingEvent> source = new PageImpl<>(loggingEventList, new PageRequest(1, 2), 5);
+        Page<LoggingEvent> source = new PageImpl<>(loggingEventList, PageRequest.of(1, 2), 5);
         given(entityConverter.convert(CORE_LOGGING_EVENT_1)).willReturn(API_LOGGING_EVENT_1);
         given(entityConverter.convert(CORE_LOGGING_EVENT_2)).willReturn(API_LOGGING_EVENT_2);
 

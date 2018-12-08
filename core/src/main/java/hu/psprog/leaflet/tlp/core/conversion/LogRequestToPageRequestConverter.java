@@ -17,7 +17,7 @@ public class LogRequestToPageRequestConverter implements Converter<LogRequest, P
 
     @Override
     public Pageable convert(LogRequest source) {
-        return new PageRequest(getCorrectedPageNumber(source), source.getLimit(), mapDirection(source), mapOrderBy(source));
+        return PageRequest.of(getCorrectedPageNumber(source), source.getLimit(), mapDirection(source), mapOrderBy(source));
     }
 
     private int getCorrectedPageNumber(LogRequest logRequest) {
