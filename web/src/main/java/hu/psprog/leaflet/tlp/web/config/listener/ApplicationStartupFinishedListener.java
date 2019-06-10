@@ -3,10 +3,14 @@ package hu.psprog.leaflet.tlp.web.config.listener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.info.BuildProperties;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
+
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.util.Optional;
 
 /**
  * Application startup finished listener.
@@ -16,21 +20,27 @@ import org.springframework.stereotype.Component;
 @Component
 public class ApplicationStartupFinishedListener implements ApplicationListener<ContextRefreshedEvent> {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(ApplicationStartupFinishedListener.class);
-    private static final String APP_VERSION = "${app.version}";
-    private static final String APP_BUILD_DATE_PROPERTY = "${app.built}";
 
-    private String appVersion;
-    private String builtOn;
+    private static final Logger LOGGER = LoggerFactory.getLogger(ApplicationStartupFinishedListener.class);
+    private static final String UNKNOWN_BUILD_TIME = "unknown";
+
+    private Optional<BuildProperties> optionalBuildProperties;
 
     @Autowired
-    public ApplicationStartupFinishedListener(@Value(APP_VERSION) String appVersion, @Value(APP_BUILD_DATE_PROPERTY) String builtOn) {
-        this.appVersion = appVersion;
-        this.builtOn = builtOn;
+    public ApplicationStartupFinishedListener(@Autowired(required = false) Optional<BuildProperties> buildProperties) {
+        this.optionalBuildProperties = buildProperties;
     }
 
     @Override
     public void onApplicationEvent(ContextRefreshedEvent event) {
-        LOGGER.info("Application loaded successfully, running version v{}, built on {}", appVersion, builtOn);
+        optionalBuildProperties.ifPresent(buildProperties ->
+                LOGGER.info("Application loaded successfully, running version v{}, built on {}", buildProperties.getVersion(), getBuildTime(buildProperties)));
+    }
+
+    private String getBuildTime(BuildProperties buildProperties) {
+        return Optional.ofNullable(buildProperties.getTime())
+                .map(buildTime -> buildTime.atZone(ZoneId.systemDefault()))
+                .map(ZonedDateTime::toString)
+                .orElse(UNKNOWN_BUILD_TIME);
     }
 }
