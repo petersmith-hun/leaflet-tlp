@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 @Component
 public class PageLoggingEventToLogEventPageConverter implements Converter<Page<LoggingEvent>, LogEventPage> {
 
-    private LoggingEventEntityToDomainConverter loggingEventEntityToDomainConverter;
+    private final LoggingEventEntityToDomainConverter loggingEventEntityToDomainConverter;
 
     @Autowired
     public PageLoggingEventToLogEventPageConverter(LoggingEventEntityToDomainConverter loggingEventEntityToDomainConverter) {

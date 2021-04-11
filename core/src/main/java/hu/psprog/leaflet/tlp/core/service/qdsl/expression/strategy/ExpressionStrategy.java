@@ -1,28 +1,33 @@
 package hu.psprog.leaflet.tlp.core.service.qdsl.expression.strategy;
 
 import com.querydsl.core.types.dsl.BooleanExpression;
-import hu.psprog.leaflet.tlp.api.domain.LogRequest;
+import hu.psprog.leaflet.tlp.core.domain.ExpressionStrategyGroup;
 import hu.psprog.leaflet.tlp.core.domain.LoggingEvent;
 import hu.psprog.leaflet.tlp.core.domain.QLoggingEvent;
-
-import java.util.Optional;
+import hu.psprog.leaflet.tlql.ir.DSLCondition;
 
 /**
- * Expression strategy implementations handle filtering by {@link LogRequest}.
- * For every {@link LogRequest} fitler field a strategy should be implemented.
+ * Expression strategy implementations handle filtering by {@link DSLCondition}.
+ * A strategy should be implemented for every {@link ExpressionStrategyGroup}.
  *
  * @author Peter Smith
  */
 public interface ExpressionStrategy {
 
     /**
-     * Tries to apply a strategy for given {@link LogRequest}.
-     * If strategy can be applied, the created {@link BooleanExpression} will returned as Optional.
-     * Otherwise an empty Optional is returned.
+     * Applies the strategy for given the {@link DSLCondition}.
+     * Applying a strategy generates a {@link BooleanExpression} that can be used as a QueryDSL Predicate in a filter chain.
      *
      * @param event meta data instance for {@link LoggingEvent}
-     * @param logRequest {@link LogRequest} object to apply strategy for
+     * @param dslCondition {@link DSLCondition} object to be transformed into a {@link BooleanExpression}
      * @return created {@link BooleanExpression} as Optional, or empty Optional if not applicable
      */
-    Optional<BooleanExpression> applyStrategy(QLoggingEvent event, LogRequest logRequest);
+    BooleanExpression applyStrategy(QLoggingEvent event, DSLCondition dslCondition);
+
+    /**
+     * Returns which {@link ExpressionStrategyGroup} this strategy implementation is linked to.
+     *
+     * @return corresponding {@link ExpressionStrategyGroup}
+     */
+    ExpressionStrategyGroup forGroup();
 }

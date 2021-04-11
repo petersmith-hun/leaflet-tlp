@@ -7,6 +7,8 @@ import hu.psprog.leaflet.tlp.core.domain.LoggingEvent;
 import hu.psprog.leaflet.tlp.core.persistence.dao.LogEventDAO;
 import hu.psprog.leaflet.tlp.core.service.LogProcessingService;
 import hu.psprog.leaflet.tlp.core.service.qdsl.expression.builder.ExpressionBuilder;
+import hu.psprog.leaflet.tlql.ir.DSLQueryModel;
+import hu.psprog.leaflet.tlql.processor.TLQLProcessorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.data.domain.Page;
@@ -23,22 +25,42 @@ import java.util.Optional;
 @Service
 public class LogProcessingServiceImpl implements LogProcessingService {
 
-    private LogEventDAO logEventDAO;
-    private ConversionService conversionService;
-    private ExpressionBuilder expressionBuilder;
+    private final LogEventDAO logEventDAO;
+    private final ConversionService conversionService;
+    private final ExpressionBuilder expressionBuilder;
+    private final TLQLProcessorService tlqlProcessorService;
 
     @Autowired
-    public LogProcessingServiceImpl(LogEventDAO logEventDAO, ConversionService conversionService, ExpressionBuilder expressionBuilder) {
+    public LogProcessingServiceImpl(LogEventDAO logEventDAO, ConversionService conversionService,
+                                    ExpressionBuilder expressionBuilder, TLQLProcessorService tlqlProcessorService) {
         this.logEventDAO = logEventDAO;
         this.conversionService = conversionService;
         this.expressionBuilder = expressionBuilder;
+        this.tlqlProcessorService = tlqlProcessorService;
     }
 
     @Override
     public LogEventPage getLogs(LogRequest logRequest) {
 
-        Optional<Predicate> expression = expressionBuilder.build(logRequest);
-        Pageable pageable = conversionService.convert(logRequest, Pageable.class);
+        return retrieveLogs(conversionService.convert(logRequest, DSLQueryModel.class));
+    }
+
+    @Override
+    public LogEventPage getLogs(String logRequest) {
+
+        return retrieveLogs(tlqlProcessorService.parse(logRequest));
+    }
+
+    @Override
+    public void storeLog(LoggingEvent loggingEvent) {
+        logEventDAO.save(loggingEvent);
+    }
+
+    private LogEventPage retrieveLogs(DSLQueryModel dslQueryModel) {
+
+        Optional<Predicate> expression = expressionBuilder.build(dslQueryModel);
+        Pageable pageable = conversionService.convert(dslQueryModel, Pageable.class);
+
         Page<LoggingEvent> loggingEventPage;
         if (expression.isPresent()) {
             loggingEventPage = logEventDAO.findAll(expression.get(), pageable);
@@ -47,10 +69,5 @@ public class LogProcessingServiceImpl implements LogProcessingService {
         }
 
         return conversionService.convert(loggingEventPage, LogEventPage.class);
-    }
-
-    @Override
-    public void storeLog(LoggingEvent loggingEvent) {
-        logEventDAO.save(loggingEvent);
     }
 }

@@ -17,7 +17,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class LogEventDAOImpl implements LogEventDAO {
 
-    private LogEventRepository logEventRepository;
+    private final LogEventRepository logEventRepository;
 
     @Autowired
     public LogEventDAOImpl(LogEventRepository logEventRepository) {

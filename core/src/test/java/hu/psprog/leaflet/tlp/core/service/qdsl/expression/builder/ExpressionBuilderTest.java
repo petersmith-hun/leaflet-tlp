@@ -6,11 +6,11 @@ import com.querydsl.core.types.dsl.BooleanExpression;
 import hu.psprog.leaflet.tlp.api.domain.LogRequest;
 import hu.psprog.leaflet.tlp.core.domain.QLoggingEvent;
 import hu.psprog.leaflet.tlp.core.service.qdsl.expression.strategy.ExpressionStrategy;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -27,7 +27,7 @@ import static org.mockito.BDDMockito.given;
  *
  * @author Peter Smith
  */
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class ExpressionBuilderTest {
 
     private static final LogRequest LOG_REQUEST = new LogRequest();
@@ -35,18 +35,18 @@ public class ExpressionBuilderTest {
     private static final BooleanExpression CONTENT_EXPRESSION = Q_LOGGING_EVENT.content.eq("test-content");
     private static final BooleanExpression SOURCE_EXPRESSION = Q_LOGGING_EVENT.source.eq("test-source");
 
-    @Mock
+    @Mock(lenient = true)
     private ExpressionStrategy applicableStrategy;
 
-    @Mock
+    @Mock(lenient = true)
     private ExpressionStrategy otherApplicableStrategy;
 
-    @Mock
+    @Mock(lenient = true)
     private ExpressionStrategy nonApplicableStrategy;
 
     private ExpressionBuilder expressionBuilder;
 
-    @Before
+    @BeforeEach
     public void setup() {
         given(applicableStrategy.applyStrategy(any(), any())).willReturn(Optional.of(CONTENT_EXPRESSION));
         given(otherApplicableStrategy.applyStrategy(any(), any())).willReturn(Optional.of(SOURCE_EXPRESSION));

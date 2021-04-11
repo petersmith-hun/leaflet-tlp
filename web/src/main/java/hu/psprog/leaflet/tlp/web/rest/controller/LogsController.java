@@ -13,9 +13,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -24,15 +24,15 @@ import org.springframework.web.bind.annotation.RestController;
  * @author Peter Smith
  */
 @RestController
-@RequestMapping(LogsController.PATH_LOGS)
 public class LogsController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(LogsController.class);
     private static final String UNEXPECTED_EXCEPTION_OCCURRED = "Unexpected exception occurred";
 
     static final String PATH_LOGS = "/logs";
+    static final String PATH_V2_LOGS = "/v2/logs";
 
-    private LogProcessingService logProcessingService;
+    private final LogProcessingService logProcessingService;
 
     @Autowired
     public LogsController(LogProcessingService logProcessingService) {
@@ -60,8 +60,27 @@ public class LogsController {
      * @return paged list of log events returned for given {@link LogRequest} with HTTP status 200
      * @throws LogRetrievalFailureException when {@link LogRequest} cannot be processed
      */
-    @RequestMapping(method = RequestMethod.GET)
+    @GetMapping(path = PATH_LOGS)
     public ResponseEntity<LogEventPage> getLogs(LogRequest logRequest) throws LogRetrievalFailureException {
+
+        try {
+            return ResponseEntity
+                    .ok(logProcessingService.getLogs(logRequest));
+        } catch (Exception exc) {
+            throw new LogRetrievalFailureException(logRequest, exc);
+        }
+    }
+
+    /**
+     * POST /v2/logs
+     * Returns stored messages. Expects a valid TLQL query string.
+     *
+     * @param logRequest TLQL query string
+     * @return paged list of log events returned for given TLQL query with HTTP status 200
+     * @throws LogRetrievalFailureException when TLQL query cannot be processed
+     */
+    @PostMapping(path = PATH_V2_LOGS)
+    public ResponseEntity<LogEventPage> getLogs(@RequestBody String logRequest) throws LogRetrievalFailureException {
 
         try {
             return ResponseEntity
@@ -79,7 +98,7 @@ public class LogsController {
      * @return empty response with HTTP status 201
      * @throws LoggingEventProcessingFailureException when received {@link LoggingEvent} cannot be processed
      */
-    @RequestMapping(method = RequestMethod.POST)
+    @PostMapping(path = PATH_LOGS)
     public ResponseEntity<Void> storeLog(@RequestBody LoggingEvent loggingEvent) throws LoggingEventProcessingFailureException {
 
         try {
