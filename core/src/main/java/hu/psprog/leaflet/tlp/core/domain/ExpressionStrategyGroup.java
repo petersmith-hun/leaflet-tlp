@@ -17,17 +17,12 @@ import java.util.stream.Stream;
 public enum ExpressionStrategyGroup {
 
     /**
-     * Group for strict-equality based values.
+     * Group for textual value processing.
      */
-    GENERIC_STRICT_CONDITION(DSLObject.LEVEL, DSLObject.SOURCE),
+    TEXT_CONDITION(DSLObject.LEVEL, DSLObject.SOURCE, DSLObject.LOGGER, DSLObject.MESSAGE),
 
     /**
-     * Group for flexible-equality based values ("like" operation).
-     */
-    GENERIC_FLEXIBLE_CONDITION(DSLObject.LOGGER, DSLObject.MESSAGE),
-
-    /**
-     * Group for timestamp processing.
+     * Group for timestamp value processing.
      */
     TIMESTAMP_CONDITION(DSLObject.TIMESTAMP);
 
@@ -49,7 +44,6 @@ public enum ExpressionStrategyGroup {
      * @return the corresponding group enum
      */
     public static ExpressionStrategyGroup getByApplicationDSLObject(DSLObject dslObject) {
-
         return (ExpressionStrategyGroup) DSL_OBJECT_EXPRESSION_STRATEGY_MAP.get(dslObject);
     }
 }
