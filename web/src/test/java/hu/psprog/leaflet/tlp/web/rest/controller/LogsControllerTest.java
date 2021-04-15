@@ -33,6 +33,7 @@ import static org.mockito.Mockito.verify;
 public class LogsControllerTest {
 
     private static final LogRequest LOG_REQUEST = new LogRequest();
+    private static final String TLQL_LOG_REQUEST = "search with conditions";
     private static final LogEventPage LOG_EVENT_PAGE = LogEventPage.getBuilder().build();
     private static final LoggingEvent LOGGING_EVENT = LoggingEvent.getBuilder().build();
     private static final String LOG_RETRIEVAL_FAILURE_MESSAGE = String.format("Failed to process log request [%s]", LOG_REQUEST);
@@ -61,6 +62,21 @@ public class LogsControllerTest {
     }
 
     @Test
+    public void shouldGetLogsViaTLQLProcessor() throws LogRetrievalFailureException {
+
+        // given
+        given(logProcessingService.getLogs(TLQL_LOG_REQUEST)).willReturn(LOG_EVENT_PAGE);
+
+        // when
+        ResponseEntity<LogEventPage> result = logsController.getLogs(TLQL_LOG_REQUEST);
+
+        // then
+        assertThat(result, notNullValue());
+        assertThat(result.getStatusCode(), equalTo(HttpStatus.OK));
+        assertThat(result.getBody(), equalTo(LOG_EVENT_PAGE));
+    }
+
+    @Test
     public void shouldGetLogsThrowLogRetrievalException() {
 
         // given
@@ -68,6 +84,19 @@ public class LogsControllerTest {
 
         // when
         Assertions.assertThrows(LogRetrievalFailureException.class, () -> logsController.getLogs(LOG_REQUEST));
+
+        // then
+        // exception expected
+    }
+
+    @Test
+    public void shouldGetLogsThrowLogRetrievalExceptionForTLQLLogRequest() {
+
+        // given
+        doThrow(RuntimeException.class).when(logProcessingService).getLogs(TLQL_LOG_REQUEST);
+
+        // when
+        Assertions.assertThrows(LogRetrievalFailureException.class, () -> logsController.getLogs(TLQL_LOG_REQUEST));
 
         // then
         // exception expected

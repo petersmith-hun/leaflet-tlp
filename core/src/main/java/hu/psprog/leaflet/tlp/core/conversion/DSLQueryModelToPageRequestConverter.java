@@ -1,5 +1,6 @@
 package hu.psprog.leaflet.tlp.core.conversion;
 
+import com.querydsl.core.types.Path;
 import hu.psprog.leaflet.tlp.core.domain.QLoggingEvent;
 import hu.psprog.leaflet.tlql.ir.DSLObject;
 import hu.psprog.leaflet.tlql.ir.DSLOrderDirection;
@@ -23,11 +24,11 @@ public class DSLQueryModelToPageRequestConverter implements Converter<DSLQueryMo
     private static final int DEFAULT_LIMIT = 50;
     private static final Sort DEFAULT_ORDERING = Sort.by(Sort.Direction.DESC, "timeStamp");
     private static final Map<DSLObject, String> DSL_OBJECT_TO_FIELD_NAME_MAP = Map.of(
-            DSLObject.SOURCE, QLoggingEvent.loggingEvent.source.toString(),
-            DSLObject.LEVEL, QLoggingEvent.loggingEvent.level.toString(),
-            DSLObject.MESSAGE, QLoggingEvent.loggingEvent.content.toString(),
-            DSLObject.TIMESTAMP, QLoggingEvent.loggingEvent.timeStamp.toString(),
-            DSLObject.LOGGER, QLoggingEvent.loggingEvent.loggerName.toString()
+            DSLObject.SOURCE, getFieldName(QLoggingEvent.loggingEvent.source),
+            DSLObject.LEVEL, getFieldName(QLoggingEvent.loggingEvent.level),
+            DSLObject.MESSAGE, getFieldName(QLoggingEvent.loggingEvent.content),
+            DSLObject.TIMESTAMP, getFieldName(QLoggingEvent.loggingEvent.timeStamp),
+            DSLObject.LOGGER, getFieldName(QLoggingEvent.loggingEvent.loggerName)
     );
 
     @Override
@@ -59,8 +60,16 @@ public class DSLQueryModelToPageRequestConverter implements Converter<DSLQueryMo
     private Sort mapSingleSort(Map.Entry<DSLObject, DSLOrderDirection> orderEntry) {
 
         Sort.Direction direction = Sort.Direction.valueOf(orderEntry.getValue().name());
-        String fieldName = DSL_OBJECT_TO_FIELD_NAME_MAP.get(orderEntry.getKey());
+        String fieldName = getDatabaseFieldName(orderEntry.getKey());
 
         return Sort.by(direction, fieldName);
+    }
+
+    private static String getFieldName(Path<?> path) {
+        return path.getMetadata().getName();
+    }
+
+    private static String getDatabaseFieldName(DSLObject dslObject) {
+        return DSL_OBJECT_TO_FIELD_NAME_MAP.get(dslObject);
     }
 }

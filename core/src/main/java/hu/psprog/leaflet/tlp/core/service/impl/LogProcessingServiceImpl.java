@@ -41,13 +41,11 @@ public class LogProcessingServiceImpl implements LogProcessingService {
 
     @Override
     public LogEventPage getLogs(LogRequest logRequest) {
-
         return retrieveLogs(conversionService.convert(logRequest, DSLQueryModel.class));
     }
 
     @Override
     public LogEventPage getLogs(String logRequest) {
-
         return retrieveLogs(tlqlProcessorService.parse(logRequest));
     }
 
@@ -61,12 +59,9 @@ public class LogProcessingServiceImpl implements LogProcessingService {
         Optional<Predicate> expression = expressionBuilder.build(dslQueryModel);
         Pageable pageable = conversionService.convert(dslQueryModel, Pageable.class);
 
-        Page<LoggingEvent> loggingEventPage;
-        if (expression.isPresent()) {
-            loggingEventPage = logEventDAO.findAll(expression.get(), pageable);
-        } else {
-            loggingEventPage = logEventDAO.findAll(pageable);
-        }
+        Page<LoggingEvent> loggingEventPage = expression.isPresent()
+                ? logEventDAO.findAll(expression.get(), pageable)
+                : logEventDAO.findAll(pageable);
 
         return conversionService.convert(loggingEventPage, LogEventPage.class);
     }

@@ -10,11 +10,18 @@ import hu.psprog.leaflet.tlql.ir.DSLObject;
 import hu.psprog.leaflet.tlql.ir.DSLOperator;
 import hu.psprog.leaflet.tlql.ir.DSLOrderDirection;
 import hu.psprog.leaflet.tlql.ir.DSLQueryModel;
+import hu.psprog.leaflet.tlql.ir.DSLTimestampValue;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.Collections;
+import java.util.Date;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.function.Function;
 
 /**
@@ -25,6 +32,7 @@ import java.util.function.Function;
 @Component
 public class LogRequestToDSLQueryModelConverter implements Converter<LogRequest, DSLQueryModel> {
 
+    private static final ZoneId UTC_ZONE_ID = ZoneId.of("UTC");
     private static final Map<OrderBy, DSLObject> ORDER_BY_TO_DSL_OBJECT_ENUM_MAP = Map.of(
             OrderBy.CONTENT, DSLObject.MESSAGE,
             OrderBy.LEVEL, DSLObject.LEVEL,
@@ -35,43 +43,94 @@ public class LogRequestToDSLQueryModelConverter implements Converter<LogRequest,
             OrderDirection.DESC, DSLOrderDirection.DESC
     );
 
-    private static final Map<DSLObject, Function<LogRequest, String>> DSL_OBJECT_PROVIDER_MAP = Map.of(
-            DSLObject.SOURCE, LogRequest::getSource,
-            DSLObject.LEVEL, LogRequest::getLevel,
-            DSLObject.MESSAGE, LogRequest::getContent
-    );
+    private static final Map<DSLObject, Function<LogRequest, String>> DSL_OBJECT_PROVIDER_MAP = createObjectProviderMap();
 
     @Override
     public DSLQueryModel convert(LogRequest logRequest) {
 
         DSLQueryModel dslQueryModel = new DSLQueryModel();
-        DSLConditionGroup dslConditionGroup = new DSLConditionGroup();
-        dslQueryModel.getConditionGroups().add(dslConditionGroup);
 
-        setConditions(logRequest, dslConditionGroup);
+        DSLConditionGroup dslConditionGroup = createConditions(logRequest);
         setPaging(logRequest, dslQueryModel);
         setOrdering(logRequest, dslQueryModel);
+
+        if (!dslConditionGroup.getConditions().isEmpty()) {
+            dslQueryModel.getConditionGroups().add(dslConditionGroup);
+        }
 
         return dslQueryModel;
     }
 
-    private void setConditions(LogRequest logRequest, DSLConditionGroup dslConditionGroup) {
+    private DSLConditionGroup createConditions(LogRequest logRequest) {
+
+        DSLConditionGroup dslConditionGroup = new DSLConditionGroup();
 
         DSL_OBJECT_PROVIDER_MAP.forEach((dslObject, mapperFunction) -> {
             String value = mapperFunction.apply(logRequest);
             if (Objects.nonNull(value)) {
-                DSLCondition dslCondition = new DSLCondition();
-                dslCondition.setObject(dslObject);
-                dslCondition.setOperator(DSLOperator.EQUALS);
-                dslCondition.setValue(value);
-
-                dslConditionGroup.getConditions().stream()
-                        .reduce((dslCondition1, dslCondition2) -> dslCondition2)
-                        .ifPresent(lastCondition -> lastCondition.setNextConditionOperator(DSLLogicalOperator.AND));
-
-                dslConditionGroup.getConditions().add(dslCondition);
+                setLogicalChain(dslConditionGroup);
+                dslConditionGroup.getConditions().add(createSimpleCondition(dslObject, value));
             }
         });
+
+        createTimestampCondition(logRequest).ifPresent(dslCondition -> {
+            setLogicalChain(dslConditionGroup);
+            dslConditionGroup.getConditions().add(dslCondition);
+        });
+
+        return dslConditionGroup;
+    }
+
+    private DSLCondition createSimpleCondition(DSLObject dslObject, String value) {
+
+        DSLCondition dslCondition = new DSLCondition();
+        dslCondition.setObject(dslObject);
+        dslCondition.setOperator(dslObject == DSLObject.MESSAGE
+                ? DSLOperator.LIKE
+                : DSLOperator.EQUALS);
+        dslCondition.setValue(value);
+
+        return dslCondition;
+    }
+
+    private Optional<DSLCondition> createTimestampCondition(LogRequest logRequest) {
+
+        DSLCondition dslCondition = null;
+
+        if (Objects.nonNull(logRequest.getFrom()) || Objects.nonNull(logRequest.getTo())) {
+
+            DSLOperator dslOperator;
+            DSLTimestampValue dslTimestampValue;
+            if (Objects.nonNull(logRequest.getFrom()) && Objects.nonNull(logRequest.getTo())) {
+                dslOperator = DSLOperator.BETWEEN;
+                dslTimestampValue = new DSLTimestampValue(DSLTimestampValue.IntervalType.FULL_EXCLUSIVE,
+                        convertDate(logRequest.getFrom()), convertDate(logRequest.getTo()));
+            } else if (Objects.nonNull(logRequest.getFrom())) {
+                dslOperator = DSLOperator.GREATER_THAN;
+                dslTimestampValue = new DSLTimestampValue(convertDate(logRequest.getFrom()));
+            } else {
+                dslOperator = DSLOperator.LESS_THAN;
+                dslTimestampValue = new DSLTimestampValue(convertDate(logRequest.getTo()));
+            }
+
+            dslCondition = new DSLCondition();
+            dslCondition.setObject(DSLObject.TIMESTAMP);
+            dslCondition.setOperator(dslOperator);
+            dslCondition.setTimestampValue(dslTimestampValue);
+        }
+
+        return Optional.ofNullable(dslCondition);
+    }
+
+    private LocalDateTime convertDate(Date date) {
+        return LocalDateTime.ofInstant(date.toInstant(), UTC_ZONE_ID);
+    }
+
+    private void setLogicalChain(DSLConditionGroup dslConditionGroup) {
+
+        dslConditionGroup.getConditions().stream()
+                .reduce((dslCondition1, dslCondition2) -> dslCondition2)
+                .ifPresent(lastCondition -> lastCondition.setNextConditionOperator(DSLLogicalOperator.AND));
     }
 
     private void setPaging(LogRequest logRequest, DSLQueryModel dslQueryModel) {
@@ -86,5 +145,15 @@ public class LogRequestToDSLQueryModelConverter implements Converter<LogRequest,
                 ORDER_BY_TO_DSL_OBJECT_ENUM_MAP.get(logRequest.getOrderBy()),
                 ORDER_DIRECTION_ENUM_MAP.get(logRequest.getOrderDirection())
         );
+    }
+
+    private static Map<DSLObject, Function<LogRequest, String>> createObjectProviderMap() {
+
+        Map<DSLObject, Function<LogRequest, String>> objectProviderMap = new LinkedHashMap<>();
+        objectProviderMap.put(DSLObject.MESSAGE, LogRequest::getContent);
+        objectProviderMap.put(DSLObject.SOURCE, LogRequest::getSource);
+        objectProviderMap.put(DSLObject.LEVEL, LogRequest::getLevel);
+
+        return Collections.unmodifiableMap(objectProviderMap);
     }
 }
