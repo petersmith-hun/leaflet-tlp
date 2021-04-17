@@ -3,10 +3,10 @@ package hu.psprog.leaflet.tlp.core.conversion;
 import hu.psprog.leaflet.tlp.core.domain.LogLevel;
 import hu.psprog.leaflet.tlp.core.domain.LoggingEvent;
 import hu.psprog.leaflet.tlp.core.domain.ThrowableProxyLogItem;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Collections;
 import java.util.Date;
@@ -22,7 +22,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
  *
  * @author Peter Smith
  */
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class LoggingEventEntityToDomainConverterTest {
 
     private static final String SOURCE = "source";

@@ -11,6 +11,10 @@ public class LogRetrievalFailureException extends Exception {
 
     private static final String MESSAGE = "Failed to process log request [%s]";
 
+    public LogRetrievalFailureException(String logRequest, Throwable cause) {
+        super(String.format(MESSAGE, logRequest), cause);
+    }
+
     public LogRetrievalFailureException(LogRequest logRequest, Throwable cause) {
         super(String.format(MESSAGE, logRequest), cause);
     }

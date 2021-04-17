@@ -7,11 +7,12 @@ import hu.psprog.leaflet.tlp.core.service.LogProcessingService;
 import hu.psprog.leaflet.tlp.web.exception.LogRetrievalFailureException;
 import hu.psprog.leaflet.tlp.web.exception.LoggingEventProcessingFailureException;
 import hu.psprog.leaflet.tlp.web.exception.model.ErrorMessageResponse;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
@@ -28,10 +29,11 @@ import static org.mockito.Mockito.verify;
  *
  * @author Peter Smith
  */
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class LogsControllerTest {
 
     private static final LogRequest LOG_REQUEST = new LogRequest();
+    private static final String TLQL_LOG_REQUEST = "search with conditions";
     private static final LogEventPage LOG_EVENT_PAGE = LogEventPage.getBuilder().build();
     private static final LoggingEvent LOGGING_EVENT = LoggingEvent.getBuilder().build();
     private static final String LOG_RETRIEVAL_FAILURE_MESSAGE = String.format("Failed to process log request [%s]", LOG_REQUEST);
@@ -59,14 +61,42 @@ public class LogsControllerTest {
         assertThat(result.getBody(), equalTo(LOG_EVENT_PAGE));
     }
 
-    @Test(expected = LogRetrievalFailureException.class)
-    public void shouldGetLogsThrowLogRetrievalException() throws LogRetrievalFailureException {
+    @Test
+    public void shouldGetLogsViaTLQLProcessor() throws LogRetrievalFailureException {
+
+        // given
+        given(logProcessingService.getLogs(TLQL_LOG_REQUEST)).willReturn(LOG_EVENT_PAGE);
+
+        // when
+        ResponseEntity<LogEventPage> result = logsController.getLogs(TLQL_LOG_REQUEST);
+
+        // then
+        assertThat(result, notNullValue());
+        assertThat(result.getStatusCode(), equalTo(HttpStatus.OK));
+        assertThat(result.getBody(), equalTo(LOG_EVENT_PAGE));
+    }
+
+    @Test
+    public void shouldGetLogsThrowLogRetrievalException() {
 
         // given
         doThrow(RuntimeException.class).when(logProcessingService).getLogs(LOG_REQUEST);
 
         // when
-        logsController.getLogs(LOG_REQUEST);
+        Assertions.assertThrows(LogRetrievalFailureException.class, () -> logsController.getLogs(LOG_REQUEST));
+
+        // then
+        // exception expected
+    }
+
+    @Test
+    public void shouldGetLogsThrowLogRetrievalExceptionForTLQLLogRequest() {
+
+        // given
+        doThrow(RuntimeException.class).when(logProcessingService).getLogs(TLQL_LOG_REQUEST);
+
+        // when
+        Assertions.assertThrows(LogRetrievalFailureException.class, () -> logsController.getLogs(TLQL_LOG_REQUEST));
 
         // then
         // exception expected
@@ -85,14 +115,14 @@ public class LogsControllerTest {
         verify(logProcessingService).storeLog(LOGGING_EVENT);
     }
 
-    @Test(expected = LoggingEventProcessingFailureException.class)
-    public void shouldStoreLogThrowLoggingEventProcessingException() throws LoggingEventProcessingFailureException {
+    @Test
+    public void shouldStoreLogThrowLoggingEventProcessingException() {
 
         // given
         doThrow(RuntimeException.class).when(logProcessingService).storeLog(LOGGING_EVENT);
 
         // when
-        logsController.storeLog(LOGGING_EVENT);
+        Assertions.assertThrows(LoggingEventProcessingFailureException.class, () -> logsController.storeLog(LOGGING_EVENT));
 
         // then
         // exception expected
