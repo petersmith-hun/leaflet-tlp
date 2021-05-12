@@ -84,6 +84,7 @@ class LogRequestToDSLQueryModelConverterTest {
         // given
         LogRequest logRequest = new LogRequest();
         logRequest.setContent("some message to be queried");
+        logRequest.setLevel("");
 
         DSLQueryModel expectedDslQueryModel = new DSLQueryModel();
         expectedDslQueryModel.getConditionGroups().add(new DSLConditionGroup());
