@@ -67,7 +67,7 @@ public class LogRequestToDSLQueryModelConverter implements Converter<LogRequest,
 
         DSL_OBJECT_PROVIDER_MAP.forEach((dslObject, mapperFunction) -> {
             String value = mapperFunction.apply(logRequest);
-            if (Objects.nonNull(value)) {
+            if (Objects.nonNull(value) && value.length() > 0) {
                 setLogicalChain(dslConditionGroup);
                 dslConditionGroup.getConditions().add(createSimpleCondition(dslObject, value));
             }
