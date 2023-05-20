@@ -54,15 +54,15 @@ public class PageLoggingEventToLogEventPageConverterTest {
 
         // then
         assertThat(result, notNullValue());
-        assertThat(result.getEntitiesOnPage(), equalTo(expectedEventList));
-        assertThat(result.getPageCount(), equalTo(3));
-        assertThat(result.getPageSize(), equalTo(2));
-        assertThat(result.getPageNumber(), equalTo(2));
-        assertThat(result.getEntityCount(), equalTo(5L));
-        assertThat(result.getEntityCountOnPage(), equalTo(2));
-        assertThat(result.isFirst(), is(false));
-        assertThat(result.isLast(), is(false));
-        assertThat(result.isHasNext(), is(true));
-        assertThat(result.isHasPrevious(), is(true));
+        assertThat(result.entitiesOnPage(), equalTo(expectedEventList));
+        assertThat(result.pageCount(), equalTo(3));
+        assertThat(result.pageSize(), equalTo(2));
+        assertThat(result.pageNumber(), equalTo(2));
+        assertThat(result.entityCount(), equalTo(5L));
+        assertThat(result.entityCountOnPage(), equalTo(2));
+        assertThat(result.first(), is(false));
+        assertThat(result.last(), is(false));
+        assertThat(result.hasNext(), is(true));
+        assertThat(result.hasPrevious(), is(true));
     }
 }
