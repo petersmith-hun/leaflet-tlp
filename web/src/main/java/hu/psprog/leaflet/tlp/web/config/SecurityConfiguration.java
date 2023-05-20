@@ -20,6 +20,7 @@ public class SecurityConfiguration {
 
     private static final String ENDPOINT_LOGS = "/logs";
     private static final String ENDPOINT_V2_LOGS = "/v2/logs";
+    private static final String ENDPOINT_ACTUATOR = "/actuator/**";
 
     private static final String SCOPE_READ_LOGS = "SCOPE_read:logs";
 
@@ -29,6 +30,8 @@ public class SecurityConfiguration {
         return http
                 .authorizeHttpRequests(registry -> registry
                         .requestMatchers(HttpMethod.POST, ENDPOINT_LOGS)
+                            .permitAll()
+                        .requestMatchers(HttpMethod.GET, ENDPOINT_ACTUATOR)
                             .permitAll()
                         .requestMatchers(HttpMethod.GET, ENDPOINT_LOGS)
                             .hasAuthority(SCOPE_READ_LOGS)
