@@ -40,10 +40,10 @@ public class ExpressionBuilderTest {
     private static final BooleanExpression SOURCE_EXPRESSION = Q_LOGGING_EVENT.source.eq("test-source");
     private static final BooleanExpression TIMESTAMP_EXPRESSION = Q_LOGGING_EVENT.timeStamp.eq(new Date());
 
-    @Mock(lenient = true)
+    @Mock(strictness = Mock.Strictness.LENIENT)
     private ExpressionStrategy textConditionExpressionStrategy;
 
-    @Mock(lenient = true)
+    @Mock(strictness = Mock.Strictness.LENIENT)
     private ExpressionStrategy timestampConditionExpressionStrategy;
 
     private ExpressionBuilder expressionBuilder;

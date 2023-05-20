@@ -5,7 +5,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configurers.oauth2.server.resource.OAuth2ResourceServerConfigurer;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 
@@ -27,23 +27,21 @@ public class SecurityConfiguration {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
         return http
-                .authorizeRequests()
-                    .antMatchers(HttpMethod.POST, ENDPOINT_LOGS)
-                        .permitAll()
-                    .antMatchers(HttpMethod.GET, ENDPOINT_LOGS)
-                        .hasAuthority(SCOPE_READ_LOGS)
-                    .antMatchers(HttpMethod.POST, ENDPOINT_V2_LOGS)
-                        .hasAuthority(SCOPE_READ_LOGS)
-                    .and()
+                .authorizeHttpRequests(registry -> registry
+                        .requestMatchers(HttpMethod.POST, ENDPOINT_LOGS)
+                            .permitAll()
+                        .requestMatchers(HttpMethod.GET, ENDPOINT_LOGS)
+                            .hasAuthority(SCOPE_READ_LOGS)
+                        .requestMatchers(HttpMethod.POST, ENDPOINT_V2_LOGS)
+                            .hasAuthority(SCOPE_READ_LOGS))
 
-                .csrf()
-                    .disable()
+                .csrf(AbstractHttpConfigurer::disable)
 
-                .sessionManagement()
-                    .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                    .and()
+                .sessionManagement(sessionManagement -> sessionManagement
+                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 
-                .oauth2ResourceServer(OAuth2ResourceServerConfigurer::jwt)
+                .oauth2ResourceServer(resourceServer -> resourceServer
+                        .jwt(jwtConfigurer -> {}))
 
                 .build();
     }

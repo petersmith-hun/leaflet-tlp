@@ -24,7 +24,7 @@ public class ApplicationStartupFinishedListener implements ApplicationListener<C
     private static final Logger LOGGER = LoggerFactory.getLogger(ApplicationStartupFinishedListener.class);
     private static final String UNKNOWN_BUILD_TIME = "unknown";
 
-    private Optional<BuildProperties> optionalBuildProperties;
+    private final Optional<BuildProperties> optionalBuildProperties;
 
     @Autowired
     public ApplicationStartupFinishedListener(@Autowired(required = false) Optional<BuildProperties> buildProperties) {

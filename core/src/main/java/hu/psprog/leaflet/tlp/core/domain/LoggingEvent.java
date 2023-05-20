@@ -1,9 +1,7 @@
 package hu.psprog.leaflet.tlp.core.domain;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.commons.lang3.builder.ToStringBuilder;
+import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -15,6 +13,7 @@ import java.util.Date;
  *
  * @author Peter Smith
  */
+@Data
 @Document
 @JsonDeserialize(builder = LoggingEvent.LoggingEventBuilder.class)
 public class LoggingEvent {
@@ -35,83 +34,6 @@ public class LoggingEvent {
 
     @Indexed(name = "tlp-index.source")
     private String source;
-
-    public String getId() {
-        return id;
-    }
-
-    public String getThreadName() {
-        return threadName;
-    }
-
-    public String getLoggerName() {
-        return loggerName;
-    }
-
-    public String getLevel() {
-        return level;
-    }
-
-    public String getContent() {
-        return content;
-    }
-
-    public ThrowableProxyLogItem getException() {
-        return exception;
-    }
-
-    public Date getTimeStamp() {
-        return timeStamp;
-    }
-
-    public String getSource() {
-        return source;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-
-        if (o == null || getClass() != o.getClass()) return false;
-
-        LoggingEvent that = (LoggingEvent) o;
-
-        return new EqualsBuilder()
-                .append(timeStamp, that.timeStamp)
-                .append(threadName, that.threadName)
-                .append(loggerName, that.loggerName)
-                .append(level, that.level)
-                .append(content, that.content)
-                .append(exception, that.exception)
-                .append(source, that.source)
-                .isEquals();
-    }
-
-    @Override
-    public int hashCode() {
-        return new HashCodeBuilder(17, 37)
-                .append(threadName)
-                .append(loggerName)
-                .append(level)
-                .append(content)
-                .append(exception)
-                .append(timeStamp)
-                .append(source)
-                .toHashCode();
-    }
-
-    @Override
-    public String toString() {
-        return new ToStringBuilder(this)
-                .append("threadName", threadName)
-                .append("loggerName", loggerName)
-                .append("level", level)
-                .append("content", content)
-                .append("exception", exception)
-                .append("timeStamp", timeStamp)
-                .append("source", source)
-                .toString();
-    }
 
     public static LoggingEventBuilder getBuilder() {
         return new LoggingEventBuilder();

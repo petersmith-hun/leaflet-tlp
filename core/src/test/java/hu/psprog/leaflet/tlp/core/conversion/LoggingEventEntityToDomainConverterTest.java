@@ -53,13 +53,13 @@ public class LoggingEventEntityToDomainConverterTest {
 
         // then
         assertThat(result, notNullValue());
-        assertThat(result.getSource(), equalTo(SOURCE));
-        assertThat(result.getTimeStamp(), equalTo(TIME_STAMP));
-        assertThat(result.getContent(), equalTo(CONTENT));
-        assertThat(result.getLevel(), equalTo(LOG_LEVEL.getLevelStr()));
-        assertThat(result.getLoggerName(), equalTo(LOGGER_NAME));
-        assertThat(result.getThreadName(), equalTo(THREAD_NAME));
-        assertThat(result.getException(), nullValue());
+        assertThat(result.source(), equalTo(SOURCE));
+        assertThat(result.timeStamp(), equalTo(TIME_STAMP));
+        assertThat(result.content(), equalTo(CONTENT));
+        assertThat(result.level(), equalTo(LOG_LEVEL.getLevelStr()));
+        assertThat(result.loggerName(), equalTo(LOGGER_NAME));
+        assertThat(result.threadName(), equalTo(THREAD_NAME));
+        assertThat(result.exception(), nullValue());
     }
 
     @Test
@@ -77,21 +77,21 @@ public class LoggingEventEntityToDomainConverterTest {
 
         // then
         assertThat(result, notNullValue());
-        assertThat(result.getException(), notNullValue());
-        assertThat(result.getException().getClassName(), equalTo("class-name 1"));
-        assertThat(result.getException().getMessage(), equalTo("exception message 1"));
-        assertThat(result.getException().getStackTrace(), equalTo("stack-trace 1"));
-        assertThat(result.getException().getSuppressed().isEmpty(), is(true));
-        assertThat(result.getException().getCause().getClassName(), equalTo("class-name 3"));
-        assertThat(result.getException().getCause().getMessage(), equalTo("exception message 3"));
-        assertThat(result.getException().getCause().getStackTrace(), equalTo("stack-trace 3"));
-        assertThat(result.getException().getCause().getSuppressed().size(), equalTo(1));
-        assertThat(result.getException().getCause().getSuppressed().get(0), equalTo(result.getException().getCause().getCause()));
-        assertThat(result.getException().getCause().getCause().getClassName(), equalTo("class-name 2"));
-        assertThat(result.getException().getCause().getCause().getMessage(), equalTo("exception message 2"));
-        assertThat(result.getException().getCause().getCause().getStackTrace(), equalTo("stack-trace 2"));
-        assertThat(result.getException().getCause().getCause().getCause(), nullValue());
-        assertThat(result.getException().getCause().getCause().getSuppressed().isEmpty(), is(true));
+        assertThat(result.exception(), notNullValue());
+        assertThat(result.exception().className(), equalTo("class-name 1"));
+        assertThat(result.exception().message(), equalTo("exception message 1"));
+        assertThat(result.exception().stackTrace(), equalTo("stack-trace 1"));
+        assertThat(result.exception().suppressed().isEmpty(), is(true));
+        assertThat(result.exception().cause().className(), equalTo("class-name 3"));
+        assertThat(result.exception().cause().message(), equalTo("exception message 3"));
+        assertThat(result.exception().cause().stackTrace(), equalTo("stack-trace 3"));
+        assertThat(result.exception().cause().suppressed().size(), equalTo(1));
+        assertThat(result.exception().cause().suppressed().get(0), equalTo(result.exception().cause().cause()));
+        assertThat(result.exception().cause().cause().className(), equalTo("class-name 2"));
+        assertThat(result.exception().cause().cause().message(), equalTo("exception message 2"));
+        assertThat(result.exception().cause().cause().stackTrace(), equalTo("stack-trace 2"));
+        assertThat(result.exception().cause().cause().cause(), nullValue());
+        assertThat(result.exception().cause().cause().suppressed().isEmpty(), is(true));
     }
 
     private ThrowableProxyLogItem prepareThrowableProxyLogItem(int exceptionID, ThrowableProxyLogItem cause, boolean withSuppressed) {

@@ -140,7 +140,7 @@ public class LogsControllerTest {
         // then
         assertThat(result, notNullValue());
         assertThat(result.getStatusCode(), equalTo(HttpStatus.BAD_REQUEST));
-        assertThat(result.getBody().getMessage(), equalTo(LOG_RETRIEVAL_FAILURE_MESSAGE));
+        assertThat(result.getBody().message(), equalTo(LOG_RETRIEVAL_FAILURE_MESSAGE));
     }
 
     @Test
@@ -155,7 +155,7 @@ public class LogsControllerTest {
         // then
         assertThat(result, notNullValue());
         assertThat(result.getStatusCode(), equalTo(HttpStatus.CONFLICT));
-        assertThat(result.getBody().getMessage(), equalTo(LOGGING_EVENT_PROCESSING_FAILURE_MESSAGE));
+        assertThat(result.getBody().message(), equalTo(LOGGING_EVENT_PROCESSING_FAILURE_MESSAGE));
     }
 
     @Test
@@ -170,6 +170,6 @@ public class LogsControllerTest {
         // then
         assertThat(result, notNullValue());
         assertThat(result.getStatusCode(), equalTo(HttpStatus.INTERNAL_SERVER_ERROR));
-        assertThat(result.getBody().getMessage(), equalTo(UNEXPECTED_EXCEPTION_MESSAGE));
+        assertThat(result.getBody().message(), equalTo(UNEXPECTED_EXCEPTION_MESSAGE));
     }
 }

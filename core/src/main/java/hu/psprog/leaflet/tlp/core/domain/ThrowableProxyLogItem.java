@@ -1,9 +1,7 @@
 package hu.psprog.leaflet.tlp.core.domain;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.commons.lang3.builder.ToStringBuilder;
+import lombok.Data;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -13,6 +11,7 @@ import java.util.stream.Collectors;
  *
  * @author Peter Smith
  */
+@Data
 @JsonDeserialize(builder = ThrowableProxyLogItem.ThrowableProxyBuilder.class)
 public class ThrowableProxyLogItem {
 
@@ -21,65 +20,6 @@ public class ThrowableProxyLogItem {
     private String stackTrace;
     private ThrowableProxyLogItem cause;
     private List<ThrowableProxyLogItem> suppressed;
-
-    public String getClassName() {
-        return className;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public ThrowableProxyLogItem getCause() {
-        return cause;
-    }
-
-    public List<ThrowableProxyLogItem> getSuppressed() {
-        return suppressed;
-    }
-
-    public String getStackTrace() {
-        return stackTrace;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-
-        if (o == null || getClass() != o.getClass()) return false;
-
-        ThrowableProxyLogItem that = (ThrowableProxyLogItem) o;
-
-        return new EqualsBuilder()
-                .append(className, that.className)
-                .append(message, that.message)
-                .append(stackTrace, that.stackTrace)
-                .append(cause, that.cause)
-                .append(suppressed, that.suppressed)
-                .isEquals();
-    }
-
-    @Override
-    public int hashCode() {
-        return new HashCodeBuilder(17, 37)
-                .append(className)
-                .append(message)
-                .append(stackTrace)
-                .append(cause)
-                .append(suppressed)
-                .toHashCode();
-    }
-
-    @Override
-    public String toString() {
-        return new ToStringBuilder(this)
-                .append("className", className)
-                .append("message", message)
-                .append("stackTrace", stackTrace)
-                .append("cause", cause)
-                .append("suppressed", suppressed)
-                .toString();
-    }
 
     public static ThrowableProxyBuilder getBuilder() {
         return new ThrowableProxyBuilder();

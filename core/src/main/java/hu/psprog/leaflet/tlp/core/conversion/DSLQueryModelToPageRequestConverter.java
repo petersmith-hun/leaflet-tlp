@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
 import java.util.Map;
 
 /**
- * Extracts pagination information from a {@link DSLQueryModel} object and converts to to {@link Pageable} object.
+ * Extracts pagination information from a {@link DSLQueryModel} object and converts to {@link Pageable} object.
  *
  * @author Peter Smith
  */
