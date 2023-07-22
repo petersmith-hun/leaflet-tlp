@@ -7,6 +7,7 @@ import hu.psprog.leaflet.tlql.ir.DSLCondition;
 import hu.psprog.leaflet.tlql.ir.DSLConditionGroup;
 import hu.psprog.leaflet.tlql.ir.DSLLogicalOperator;
 import hu.psprog.leaflet.tlql.ir.DSLObject;
+import hu.psprog.leaflet.tlql.ir.DSLObjectContext;
 import hu.psprog.leaflet.tlql.ir.DSLOperator;
 import hu.psprog.leaflet.tlql.ir.DSLOrderDirection;
 import hu.psprog.leaflet.tlql.ir.DSLQueryModel;
@@ -84,7 +85,7 @@ public class LogRequestToDSLQueryModelConverter implements Converter<LogRequest,
     private DSLCondition createSimpleCondition(DSLObject dslObject, String value) {
 
         DSLCondition dslCondition = new DSLCondition();
-        dslCondition.setObject(dslObject);
+        dslCondition.setObjectContext(new DSLObjectContext(dslObject, null));
         dslCondition.setOperator(dslObject == DSLObject.MESSAGE
                 ? DSLOperator.LIKE
                 : DSLOperator.EQUALS);
@@ -114,7 +115,7 @@ public class LogRequestToDSLQueryModelConverter implements Converter<LogRequest,
             }
 
             dslCondition = new DSLCondition();
-            dslCondition.setObject(DSLObject.TIMESTAMP);
+            dslCondition.setObjectContext(new DSLObjectContext(DSLObject.TIMESTAMP, null));
             dslCondition.setOperator(dslOperator);
             dslCondition.setTimestampValue(dslTimestampValue);
         }

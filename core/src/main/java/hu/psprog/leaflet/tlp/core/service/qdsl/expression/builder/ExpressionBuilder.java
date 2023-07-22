@@ -57,7 +57,7 @@ public class ExpressionBuilder {
             BooleanBuilder groupExpression = new BooleanBuilder();
 
             for (DSLCondition dslCondition : dslConditionGroup.getConditions()) {
-                ExpressionStrategyGroup group = ExpressionStrategyGroup.getByApplicationDSLObject(dslCondition.getObject());
+                ExpressionStrategyGroup group = ExpressionStrategyGroup.getByApplicationDSLObject(dslCondition.getObjectContext().getObject());
                 BooleanExpression conditionExpression = expressionStrategyMap.get(group).applyStrategy(event, dslCondition);
 
                 chainExpression(groupExpression, previousOperator, conditionExpression);

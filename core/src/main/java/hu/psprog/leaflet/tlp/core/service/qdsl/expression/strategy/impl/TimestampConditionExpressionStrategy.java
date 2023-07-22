@@ -51,7 +51,7 @@ public class TimestampConditionExpressionStrategy implements ExpressionStrategy 
 
         DSLTimestampValue timestampValue = dslCondition.getTimestampValue();
         DSLOperator operator = dslCondition.getOperator();
-        DateTimePath<Date> path = mappingRegistry.getQDSLPath(dslCondition.getObject()).apply(event);
+        DateTimePath<Date> path = mappingRegistry.getQDSLPath(dslCondition.getObjectContext().getObject()).apply(event);
 
         return operator == DSLOperator.BETWEEN
                 ? createIntervalExpression(path, timestampValue)

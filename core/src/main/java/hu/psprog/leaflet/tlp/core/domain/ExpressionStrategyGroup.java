@@ -22,6 +22,11 @@ public enum ExpressionStrategyGroup {
     TEXT_CONDITION(DSLObject.LEVEL, DSLObject.SOURCE, DSLObject.LOGGER, DSLObject.MESSAGE),
 
     /**
+     * Group for log context value processing.
+     */
+    TEXT_MAP_CONDITION(DSLObject.CONTEXT),
+
+    /**
      * Group for timestamp value processing.
      */
     TIMESTAMP_CONDITION(DSLObject.TIMESTAMP);

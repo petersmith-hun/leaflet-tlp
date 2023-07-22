@@ -10,6 +10,7 @@ import hu.psprog.leaflet.tlql.ir.DSLCondition;
 import hu.psprog.leaflet.tlql.ir.DSLConditionGroup;
 import hu.psprog.leaflet.tlql.ir.DSLLogicalOperator;
 import hu.psprog.leaflet.tlql.ir.DSLObject;
+import hu.psprog.leaflet.tlql.ir.DSLObjectContext;
 import hu.psprog.leaflet.tlql.ir.DSLQueryModel;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -183,7 +184,7 @@ public class ExpressionBuilderTest {
     private void addCondition(DSLQueryModel dslQueryModel, int groupIndex, DSLObject object, DSLLogicalOperator nextOperator) {
 
         DSLCondition dslCondition = new DSLCondition();
-        dslCondition.setObject(object);
+        dslCondition.setObjectContext(new DSLObjectContext(object, null));
         dslCondition.setNextConditionOperator(nextOperator);
 
         dslQueryModel.getConditionGroups().get(groupIndex).getConditions().add(dslCondition);

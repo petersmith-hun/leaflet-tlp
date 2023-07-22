@@ -7,6 +7,7 @@ import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.Date;
+import java.util.Map;
 
 /**
  * Domain object for parsing and storing received log events.
@@ -35,6 +36,9 @@ public class LoggingEvent {
     @Indexed(name = "tlp-index.source")
     private String source;
 
+    @Indexed(name = "tlp-index.context")
+    private Map<String, String> context;
+
     public static LoggingEventBuilder getBuilder() {
         return new LoggingEventBuilder();
     }
@@ -50,6 +54,7 @@ public class LoggingEvent {
         private ThrowableProxyLogItem exception;
         private Date timeStamp;
         private String source;
+        private Map<String, String> context;
 
         private LoggingEventBuilder() {
         }
@@ -99,6 +104,11 @@ public class LoggingEvent {
             return this;
         }
 
+        public LoggingEventBuilder withContext(Map<String, String> context) {
+            this.context = context;
+            return this;
+        }
+
         public LoggingEvent build() {
             LoggingEvent loggingEvent = new LoggingEvent();
             loggingEvent.content = this.content;
@@ -108,6 +118,7 @@ public class LoggingEvent {
             loggingEvent.timeStamp = this.timeStamp;
             loggingEvent.level = this.level;
             loggingEvent.source = this.source;
+            loggingEvent.context = this.context;
             return loggingEvent;
         }
     }
