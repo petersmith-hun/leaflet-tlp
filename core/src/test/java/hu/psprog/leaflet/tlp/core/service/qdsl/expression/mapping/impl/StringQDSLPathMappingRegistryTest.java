@@ -90,7 +90,8 @@ class StringQDSLPathMappingRegistryTest {
                 Arguments.of(DSLObject.SOURCE, "source"),
                 Arguments.of(DSLObject.LEVEL, "level"),
                 Arguments.of(DSLObject.LOGGER, "loggerName"),
-                Arguments.of(DSLObject.MESSAGE, "content")
+                Arguments.of(DSLObject.MESSAGE, "content"),
+                Arguments.of(DSLObject.THREAD, "threadName")
         );
     }
 
