@@ -7,6 +7,7 @@ import hu.psprog.leaflet.tlp.core.domain.QLoggingEvent;
 import hu.psprog.leaflet.tlp.core.service.qdsl.expression.mapping.MappingRegistry;
 import hu.psprog.leaflet.tlql.ir.DSLCondition;
 import hu.psprog.leaflet.tlql.ir.DSLObject;
+import hu.psprog.leaflet.tlql.ir.DSLObjectContext;
 import hu.psprog.leaflet.tlql.ir.DSLOperator;
 import hu.psprog.leaflet.tlql.ir.DSLTimestampValue;
 import org.junit.jupiter.api.Test;
@@ -165,7 +166,7 @@ class TimestampConditionExpressionStrategyTest {
     private DSLCondition prepareDSLCondition(String leftDate, String rightDate, DSLOperator dslOperator, DSLTimestampValue.IntervalType intervalType) {
 
         DSLCondition dslCondition = new DSLCondition();
-        dslCondition.setObject(DSLObject.TIMESTAMP);
+        dslCondition.setObjectContext(new DSLObjectContext(DSLObject.TIMESTAMP, null));
         dslCondition.setOperator(dslOperator);
         dslCondition.setTimestampValue(intervalType == DSLTimestampValue.IntervalType.NONE
                 ? new DSLTimestampValue(prepareLocalDateTime(leftDate))

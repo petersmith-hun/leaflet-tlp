@@ -8,6 +8,7 @@ import hu.psprog.leaflet.tlp.core.domain.QLoggingEvent;
 import hu.psprog.leaflet.tlp.core.service.qdsl.expression.mapping.MappingRegistry;
 import hu.psprog.leaflet.tlql.ir.DSLCondition;
 import hu.psprog.leaflet.tlql.ir.DSLObject;
+import hu.psprog.leaflet.tlql.ir.DSLObjectContext;
 import hu.psprog.leaflet.tlql.ir.DSLOperator;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -107,7 +108,7 @@ class TextConditionExpressionStrategyTest {
     private DSLCondition prepareDSLCondition(DSLObject dslObject, DSLOperator dslOperator, String... values) {
 
         DSLCondition dslCondition = new DSLCondition();
-        dslCondition.setObject(dslObject);
+        dslCondition.setObjectContext(new DSLObjectContext(dslObject, null));
         dslCondition.setOperator(dslOperator);
 
         if (values.length > 1) {

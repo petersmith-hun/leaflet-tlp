@@ -59,8 +59,10 @@ public class LogsController {
      * @param logRequest paging and filtering parameters parsed as {@link LogRequest} object
      * @return paged list of log events returned for given {@link LogRequest} with HTTP status 200
      * @throws LogRetrievalFailureException when {@link LogRequest} cannot be processed
+     * @deprecated this endpoint is part of the old TLP API and will be removed in the next major version
      */
     @GetMapping(path = PATH_LOGS)
+    @Deprecated(forRemoval = true)
     public ResponseEntity<LogEventPage> getLogs(LogRequest logRequest) throws LogRetrievalFailureException {
 
         try {

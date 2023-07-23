@@ -10,6 +10,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Collections;
 import java.util.Date;
+import java.util.Map;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
@@ -36,7 +37,7 @@ public class LoggingEventEntityToDomainConverterTest {
     private LoggingEventEntityToDomainConverter converter;
 
     @Test
-    public void shouldConvertWithoutException() {
+    public void shouldConvertWithoutExceptionAndContext() {
 
         // given
         LoggingEvent loggingEvent = LoggingEvent.getBuilder()
@@ -59,17 +60,20 @@ public class LoggingEventEntityToDomainConverterTest {
         assertThat(result.level(), equalTo(LOG_LEVEL.getLevelStr()));
         assertThat(result.loggerName(), equalTo(LOGGER_NAME));
         assertThat(result.threadName(), equalTo(THREAD_NAME));
+        assertThat(result.context(), equalTo(Collections.emptyMap()));
         assertThat(result.exception(), nullValue());
     }
 
     @Test
-    public void shouldConvertWithException() {
+    public void shouldConvertWithExceptionAndContext() {
 
         // given
         ThrowableProxyLogItem cause1 = prepareThrowableProxyLogItem(2, null, false);
         ThrowableProxyLogItem cause2 = prepareThrowableProxyLogItem(3, cause1, true);
+        Map<String, String> context = Map.of("requestID", "request-1234");
         LoggingEvent loggingEvent = LoggingEvent.getBuilder()
                 .withException(prepareThrowableProxyLogItem(1, cause2, false))
+                .withContext(context)
                 .build();
 
         // when
@@ -92,6 +96,7 @@ public class LoggingEventEntityToDomainConverterTest {
         assertThat(result.exception().cause().cause().stackTrace(), equalTo("stack-trace 2"));
         assertThat(result.exception().cause().cause().cause(), nullValue());
         assertThat(result.exception().cause().cause().suppressed().isEmpty(), is(true));
+        assertThat(result.context(), equalTo(context));
     }
 
     private ThrowableProxyLogItem prepareThrowableProxyLogItem(int exceptionID, ThrowableProxyLogItem cause, boolean withSuppressed) {

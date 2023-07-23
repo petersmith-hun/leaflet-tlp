@@ -16,7 +16,7 @@ import java.util.function.Function;
 
 /**
  * {@link MappingRegistry} implementation for database fields accessible via {@link StringPath} QueryDSL expressions.
- * Currently used for source, level, logger and messages fields of log records. Base type is (implicitly) string.
+ * Currently used for source, level, logger, message and thread fields of log records. Base type is (implicitly) string.
  *
  * @author Peter Smith
  */
@@ -27,7 +27,8 @@ public class StringQDSLPathMappingRegistry implements MappingRegistry<StringPath
             DSLObject.SOURCE, event -> event.source,
             DSLObject.LEVEL, event -> event.level,
             DSLObject.LOGGER, event -> event.loggerName,
-            DSLObject.MESSAGE, event -> event.content
+            DSLObject.MESSAGE, event -> event.content,
+            DSLObject.THREAD, event -> event.threadName
     );
 
     private static final Map<DSLOperator, BiFunction<StringPath, String, BooleanExpression>> SINGLE_VALUE_BOOLEAN_EXPRESSION_GENERATOR_MAP = Map.of(

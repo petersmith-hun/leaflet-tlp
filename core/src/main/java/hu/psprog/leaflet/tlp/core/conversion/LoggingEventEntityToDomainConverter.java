@@ -31,6 +31,8 @@ public class LoggingEventEntityToDomainConverter implements Converter<hu.psprog.
                 .withException(Optional.ofNullable(source.getException())
                         .map(this::convert)
                         .orElse(null))
+                .withContext(Optional.ofNullable(source.getContext())
+                        .orElseGet(Collections::emptyMap))
                 .build();
     }
 

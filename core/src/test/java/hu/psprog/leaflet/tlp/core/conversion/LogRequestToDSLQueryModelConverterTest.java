@@ -7,6 +7,7 @@ import hu.psprog.leaflet.tlql.ir.DSLCondition;
 import hu.psprog.leaflet.tlql.ir.DSLConditionGroup;
 import hu.psprog.leaflet.tlql.ir.DSLLogicalOperator;
 import hu.psprog.leaflet.tlql.ir.DSLObject;
+import hu.psprog.leaflet.tlql.ir.DSLObjectContext;
 import hu.psprog.leaflet.tlql.ir.DSLOperator;
 import hu.psprog.leaflet.tlql.ir.DSLOrderDirection;
 import hu.psprog.leaflet.tlql.ir.DSLQueryModel;
@@ -91,7 +92,7 @@ class LogRequestToDSLQueryModelConverterTest {
         setDefaultPagination(expectedDslQueryModel);
 
         DSLCondition messageCondition = new DSLCondition();
-        messageCondition.setObject(DSLObject.MESSAGE);
+        messageCondition.setObjectContext(new DSLObjectContext(DSLObject.MESSAGE, null));
         messageCondition.setOperator(DSLOperator.LIKE);
         messageCondition.setValue(logRequest.getContent());
         expectedDslQueryModel.getConditionGroups().get(0).getConditions().add(messageCondition);
@@ -118,25 +119,25 @@ class LogRequestToDSLQueryModelConverterTest {
         setDefaultPagination(expectedDslQueryModel);
 
         DSLCondition messageCondition = new DSLCondition();
-        messageCondition.setObject(DSLObject.MESSAGE);
+        messageCondition.setObjectContext(new DSLObjectContext(DSLObject.MESSAGE, null));
         messageCondition.setOperator(DSLOperator.LIKE);
         messageCondition.setValue(logRequest.getContent());
         messageCondition.setNextConditionOperator(DSLLogicalOperator.AND);
 
         DSLCondition sourceCondition = new DSLCondition();
-        sourceCondition.setObject(DSLObject.SOURCE);
+        sourceCondition.setObjectContext(new DSLObjectContext(DSLObject.SOURCE, null));
         sourceCondition.setOperator(DSLOperator.EQUALS);
         sourceCondition.setValue(logRequest.getSource());
         sourceCondition.setNextConditionOperator(DSLLogicalOperator.AND);
 
         DSLCondition levelCondition = new DSLCondition();
-        levelCondition.setObject(DSLObject.LEVEL);
+        levelCondition.setObjectContext(new DSLObjectContext(DSLObject.LEVEL, null));
         levelCondition.setOperator(DSLOperator.EQUALS);
         levelCondition.setValue(logRequest.getLevel());
         levelCondition.setNextConditionOperator(DSLLogicalOperator.AND);
 
         DSLCondition fromCondition = new DSLCondition();
-        fromCondition.setObject(DSLObject.TIMESTAMP);
+        fromCondition.setObjectContext(new DSLObjectContext(DSLObject.TIMESTAMP, null));
         fromCondition.setOperator(DSLOperator.GREATER_THAN);
         fromCondition.setTimestampValue(new DSLTimestampValue(prepareLocalDateTime("2021-04-10")));
 
@@ -162,7 +163,7 @@ class LogRequestToDSLQueryModelConverterTest {
         setDefaultPagination(expectedDslQueryModel);
 
         DSLCondition toCondition = new DSLCondition();
-        toCondition.setObject(DSLObject.TIMESTAMP);
+        toCondition.setObjectContext(new DSLObjectContext(DSLObject.TIMESTAMP, null));
         toCondition.setOperator(DSLOperator.LESS_THAN);
         toCondition.setTimestampValue(new DSLTimestampValue(prepareLocalDateTime("2021-04-15")));
 
@@ -188,7 +189,7 @@ class LogRequestToDSLQueryModelConverterTest {
         setDefaultPagination(expectedDslQueryModel);
 
         DSLCondition toCondition = new DSLCondition();
-        toCondition.setObject(DSLObject.TIMESTAMP);
+        toCondition.setObjectContext(new DSLObjectContext(DSLObject.TIMESTAMP, null));
         toCondition.setOperator(DSLOperator.BETWEEN);
         toCondition.setTimestampValue(new DSLTimestampValue(DSLTimestampValue.IntervalType.FULL_EXCLUSIVE,
                 prepareLocalDateTime("2021-04-10"), prepareLocalDateTime("2021-04-15")));

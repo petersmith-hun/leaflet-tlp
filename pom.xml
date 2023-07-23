@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>tlp</artifactId>
-    <version>2.4.0-dev</version>
+    <version>2.5.0-dev</version>
     <modules>
         <module>web</module>
         <module>core</module>
@@ -15,7 +15,7 @@
     <parent>
         <groupId>hu.psprog.leaflet</groupId>
         <artifactId>leaflet-stack-base-bom</artifactId>
-        <version>3.0-r2305.1</version>
+        <version>3.2-r2307.3</version>
     </parent>
 
     <properties>
