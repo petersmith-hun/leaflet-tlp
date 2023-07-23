@@ -19,7 +19,7 @@ public enum ExpressionStrategyGroup {
     /**
      * Group for textual value processing.
      */
-    TEXT_CONDITION(DSLObject.LEVEL, DSLObject.SOURCE, DSLObject.LOGGER, DSLObject.MESSAGE),
+    TEXT_CONDITION(DSLObject.LEVEL, DSLObject.SOURCE, DSLObject.LOGGER, DSLObject.MESSAGE, DSLObject.THREAD),
 
     /**
      * Group for log context value processing.
