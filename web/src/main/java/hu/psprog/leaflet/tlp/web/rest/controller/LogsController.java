@@ -7,6 +7,7 @@ import hu.psprog.leaflet.tlp.core.service.LogProcessingService;
 import hu.psprog.leaflet.tlp.web.exception.LogRetrievalFailureException;
 import hu.psprog.leaflet.tlp.web.exception.LoggingEventProcessingFailureException;
 import hu.psprog.leaflet.tlp.web.exception.model.ErrorMessageResponse;
+import hu.psprog.leaflet.tlql.exception.DSLParserException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -87,6 +88,8 @@ public class LogsController {
         try {
             return ResponseEntity
                     .ok(logProcessingService.getLogs(logRequest));
+        } catch (DSLParserException exc) {
+            throw new LogRetrievalFailureException(logRequest, exc);
         } catch (Exception exc) {
             throw new LogRetrievalFailureException(logRequest, exc);
         }
