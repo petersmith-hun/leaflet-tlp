@@ -7,6 +7,7 @@ import hu.psprog.leaflet.tlp.core.service.LogProcessingService;
 import hu.psprog.leaflet.tlp.web.exception.LogRetrievalFailureException;
 import hu.psprog.leaflet.tlp.web.exception.LoggingEventProcessingFailureException;
 import hu.psprog.leaflet.tlp.web.exception.model.ErrorMessageResponse;
+import hu.psprog.leaflet.tlql.exception.DSLParserException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -100,6 +101,20 @@ public class LogsControllerTest {
 
         // then
         // exception expected
+    }
+
+    @Test
+    public void shouldGetLogsThrowLogRetrievalExceptionForInvalidTLQLLogRequest() {
+
+        // given
+        doThrow(new DSLParserException("Query 'search with conditions' is invalid")).when(logProcessingService).getLogs(TLQL_LOG_REQUEST);
+
+        // when
+        var result = Assertions.assertThrows(LogRetrievalFailureException.class, () -> logsController.getLogs(TLQL_LOG_REQUEST));
+
+        // then
+        // exception expected
+        assertThat(result.getMessage(), equalTo("Failed to process log request [search with conditions]: Query 'search with conditions' is invalid"));
     }
 
     @Test
