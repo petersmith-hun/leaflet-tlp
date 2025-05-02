@@ -1,0 +1,39 @@
+domino:
+  deployments:
+    tlp:
+      source:
+        type: DOCKER
+        home: "[dsm:common.home.docker]"
+        resource: tlp
+      target:
+        hosts:
+          - psproghu
+      execution:
+        command-name: app_tlp
+        via: STANDARD
+        args:
+          ports:
+            8084: 8084
+          network-mode: host
+          environment:
+            APP_ARGS: |
+              --spring.profiles.active=production
+              --spring.config.location=/opt/tlp/appconfig_tlp.yml
+          volumes:
+            "[dsm:volume.logs]": "/opt/tlp/logs:rw"
+            "[dsm:volume.config.tlp]": "/opt/tlp/appconfig_tlp.yml:ro"
+            "/etc/timezone": "/etc/timezone:ro"
+            "/etc/localtime": "/etc/localtime:ro"
+          restart-policy: unless-stopped
+      health-check:
+        enabled: true
+        delay: 20 seconds
+        timeout: 2 seconds
+        max-attempts: 3
+        endpoint: "http://127.0.0.1:8084/tlp/actuator/health"
+      info:
+        enabled: true
+        endpoint: "http://127.0.0.1:8084/tlp/actuator/info"
+        field-mapping:
+          abbreviation: $.app.abbreviation
+          version: $.build.version
