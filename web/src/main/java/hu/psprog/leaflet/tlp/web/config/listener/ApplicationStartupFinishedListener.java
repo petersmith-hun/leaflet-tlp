@@ -1,5 +1,6 @@
 package hu.psprog.leaflet.tlp.web.config.listener;
 
+import org.jspecify.annotations.NonNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +33,7 @@ public class ApplicationStartupFinishedListener implements ApplicationListener<C
     }
 
     @Override
-    public void onApplicationEvent(ContextRefreshedEvent event) {
+    public void onApplicationEvent(@NonNull ContextRefreshedEvent event) {
         optionalBuildProperties.ifPresent(buildProperties ->
                 LOGGER.info("Application loaded successfully, running version v{}, built on {}", buildProperties.getVersion(), getBuildTime(buildProperties)));
     }
