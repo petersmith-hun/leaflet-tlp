@@ -1,7 +1,7 @@
 package hu.psprog.leaflet.tlp.core.domain;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import lombok.Data;
+import tools.jackson.databind.annotation.JsonDeserialize;
 
 import java.util.List;
 import java.util.stream.Collectors;

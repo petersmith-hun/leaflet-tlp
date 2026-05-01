@@ -19,6 +19,8 @@ domino:
             APP_ARGS: |
               --spring.profiles.active=production
               --spring.config.location=/opt/tlp/appconfig_tlp.yml
+              --spring.mongodb.username=[dsm:apps.tlp.mongo.username]
+              --spring.mongodb.password=[dsm:apps.tlp.mongo.password]
           volumes:
             "[dsm:volume.logs]": "/opt/tlp/logs:rw"
             "[dsm:volume.config.tlp]": "/opt/tlp/appconfig_tlp.yml:ro"

@@ -1,7 +1,7 @@
 package hu.psprog.leaflet.tlp.core.domain;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import lombok.Data;
+import tools.jackson.databind.annotation.JsonDeserialize;
 
 /**
  * Stacktrace element node deserialization model that conforms Logback-original log event model format.

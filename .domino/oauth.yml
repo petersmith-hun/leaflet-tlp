@@ -1,0 +1,20 @@
+domino:
+  oauth:
+    tlp:
+      behavior:
+        target-provider: gateway-psproghu
+        roll-client-secret-on-deploy: true
+        use-secret-manager-for:
+          - client-secret
+          - client-id
+      tenant:
+        environment: prod
+        name: psproghu
+      resource-server:
+        use-audience: true
+        registered-permissions:
+          - read:logs
+        allowed-clients:
+          - name: lpmc
+            allowed-permissions:
+              - read:logs

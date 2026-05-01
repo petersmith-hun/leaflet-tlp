@@ -1,10 +1,10 @@
 package hu.psprog.leaflet.tlp.core.domain;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
+import tools.jackson.databind.annotation.JsonDeserialize;
 
 import java.util.Date;
 import java.util.Map;
